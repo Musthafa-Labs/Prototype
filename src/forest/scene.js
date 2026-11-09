@@ -18,6 +18,8 @@ import { createAtmosphericSky } from './sky.js';
 import { createLighting } from './lighting.js';
 import { createNaturalTerrain } from './terrain.js';
 import { createForestRoad } from './road.js';
+import { createVegetationSystem } from './vegetation.js';
+import { createForestFloorSystem } from './forestFloor.js';
 import { getTimeOfDayConfig, DEFAULT_TIME_OF_DAY } from './timeOfDay.js';
 
 /**
@@ -116,6 +118,22 @@ export function createForestScene(options = {}) {
   });
   scene.add(road.mesh);
 
+  // 6. Forest Trees & Dense Understory Vegetation System
+  const vegetation = createVegetationSystem({
+    isSoftwareGl,
+    preset,
+    maxAnisotropy,
+  });
+  scene.add(vegetation.group);
+
+  // 7. Forest Floor Detail System (Grass, Ferns, Rocks, Deadwood, Fallen Logs)
+  const forestFloor = createForestFloorSystem({
+    isSoftwareGl,
+    preset,
+    maxAnisotropy,
+  });
+  scene.add(forestFloor.group);
+
   /**
    * Dynamically applies a new Time of Day configuration to sky, lighting, and fog.
    * @param {string} timeKey - 'morning', 'noon', 'afternoon', 'goldenHour'
@@ -151,6 +169,8 @@ export function createForestScene(options = {}) {
     lighting.updateQuality(newPreset);
     terrain.updateQuality(newPreset);
     road.updateQuality(newPreset);
+    vegetation.updateQuality(newPreset);
+    forestFloor.updateQuality(newPreset);
   };
 
   const dispose = () => {
@@ -158,6 +178,8 @@ export function createForestScene(options = {}) {
     lighting.dispose();
     terrain.dispose();
     road.dispose();
+    vegetation.dispose();
+    forestFloor.dispose();
   };
 
   return {
@@ -166,6 +188,8 @@ export function createForestScene(options = {}) {
     lighting,
     terrain,
     road,
+    vegetation,
+    forestFloor,
     ground: terrain, // preserve backward compatibility
     get currentTimeConfig() {
       return currentTimeConfig;

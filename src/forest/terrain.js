@@ -41,19 +41,25 @@ function createProceduralTerrainTexture(size = 512) {
   }
   ctx.putImageData(imgData, 0, 0);
 
-  // 3. Organic damp soil & moss patches
-  for (let j = 0; j < 50; j++) {
+  // 3. Organic damp soil, moss, and warm leaf-litter patches
+  for (let j = 0; j < 65; j++) {
     const x = Math.random() * size;
     const y = Math.random() * size;
-    const radius = 25 + Math.random() * 65;
+    const radius = 25 + Math.random() * 70;
     const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
-    const isMoss = Math.random() > 0.4;
+    const layerType = Math.random();
 
-    if (isMoss) {
-      grad.addColorStop(0, 'rgba(84, 106, 68, 0.35)');
+    if (layerType < 0.35) {
+      // Moss patch
+      grad.addColorStop(0, 'rgba(84, 108, 66, 0.38)');
+      grad.addColorStop(1, 'rgba(68, 83, 58, 0)');
+    } else if (layerType < 0.70) {
+      // Dark damp humus loam
+      grad.addColorStop(0, 'rgba(36, 44, 30, 0.48)');
       grad.addColorStop(1, 'rgba(68, 83, 58, 0)');
     } else {
-      grad.addColorStop(0, 'rgba(46, 54, 38, 0.42)');
+      // Decayed leaf litter & organic woodland debris
+      grad.addColorStop(0, 'rgba(92, 68, 44, 0.42)');
       grad.addColorStop(1, 'rgba(68, 83, 58, 0)');
     }
 
@@ -63,10 +69,10 @@ function createProceduralTerrainTexture(size = 512) {
     ctx.fill();
   }
 
-  // 4. Subtle pine needle & dry twig accents
-  ctx.strokeStyle = 'rgba(38, 46, 32, 0.45)';
+  // 4. Subtle pine needle, decayed leaf fragments & dry twig accents
+  ctx.strokeStyle = 'rgba(42, 32, 22, 0.48)';
   ctx.lineWidth = 1.3;
-  for (let k = 0; k < 80; k++) {
+  for (let k = 0; k < 90; k++) {
     const sx = Math.random() * size;
     const sy = Math.random() * size;
     const angle = Math.random() * Math.PI * 2;
@@ -75,6 +81,17 @@ function createProceduralTerrainTexture(size = 512) {
     ctx.moveTo(sx, sy);
     ctx.lineTo(sx + Math.cos(angle) * len, sy + Math.sin(angle) * len);
     ctx.stroke();
+  }
+
+  // 5. Scattered small fallen leaf specks
+  ctx.fillStyle = 'rgba(96, 68, 38, 0.55)';
+  for (let m = 0; m < 50; m++) {
+    const lx = Math.random() * size;
+    const ly = Math.random() * size;
+    const lr = 1.2 + Math.random() * 2.2;
+    ctx.beginPath();
+    ctx.arc(lx, ly, lr, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   const texture = new THREE.CanvasTexture(canvas);

@@ -178,7 +178,7 @@ export default function App() {
               </span>
             </div>
             <p className="text-[11px] text-emerald-400/80 font-mono">
-              Natural Terrain &amp; Winding Road • TSL Ready
+              Dense Forest &amp; Winding Road • {engineInfo.totalTrees ? `${engineInfo.totalTrees.toLocaleString()} Trees` : 'Procedural Forest'}
             </p>
           </div>
         </div>
@@ -191,7 +191,9 @@ export default function App() {
           <span className="text-emerald-700">•</span>
           <span>Preset: {engineInfo.qualityPreset}</span>
           <span className="text-emerald-700">•</span>
-          <span>ACES Filmic</span>
+          <span>{engineInfo.totalTrees ? `${engineInfo.totalTrees.toLocaleString()} Trees` : 'Forest'}</span>
+          <span className="text-emerald-700">•</span>
+          <span>{engineInfo.totalFloorItems ? `${engineInfo.totalFloorItems.toLocaleString()} Flora` : 'Floor'}</span>
         </div>
       </div>
 
@@ -333,7 +335,7 @@ export default function App() {
               </div>
               <div className="font-semibold text-slate-100">{engineInfo.activeBackend}</div>
               <div className="text-[11px] text-slate-400 mt-0.5">
-                {engineInfo.qualityPreset} • Aniso: {engineInfo.anisotropy}x • Scale: {Math.round(engineInfo.resolutionScale * 100)}%
+                {engineInfo.qualityPreset} • {engineInfo.totalTrees ? `${engineInfo.totalTrees.toLocaleString()} Trees, ${engineInfo.totalFloorItems?.toLocaleString()} Floor Assets` : `Aniso: ${engineInfo.anisotropy}x`}
               </div>
             </div>
           </div>
