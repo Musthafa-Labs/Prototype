@@ -1,0 +1,6 @@
+{
+  "name": "The Hidden Forest",
+  "description": "A visual-quality 3D exploration experiment and scenic forest environment built with Three.js.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
