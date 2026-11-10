@@ -47,12 +47,12 @@ export function createVegetationSystem(options = {}) {
 
   // 1. Build prototype geometries for each distinct species
   const prototypes = {
-    [VEGETATION_SPECIES.SCOTS_PINE]: buildScotsPinePrototype(),
-    [VEGETATION_SPECIES.MATURE_OAK]: buildMatureOakPrototype(),
-    [VEGETATION_SPECIES.SILVER_BIRCH]: buildSilverBirchPrototype(),
-    [VEGETATION_SPECIES.MOUNTAIN_SPRUCE]: buildMountainSprucePrototype(),
-    [VEGETATION_SPECIES.UNDERSTORY_BUSH]: buildUnderstoryBushPrototype(),
-    [VEGETATION_SPECIES.LOW_SCRUB]: buildLowScrubPrototype(),
+    [VEGETATION_SPECIES.SCOTS_PINE]: buildScotsPinePrototype({ isSoftwareGl }),
+    [VEGETATION_SPECIES.MATURE_OAK]: buildMatureOakPrototype({ isSoftwareGl }),
+    [VEGETATION_SPECIES.SILVER_BIRCH]: buildSilverBirchPrototype({ isSoftwareGl }),
+    [VEGETATION_SPECIES.MOUNTAIN_SPRUCE]: buildMountainSprucePrototype({ isSoftwareGl }),
+    [VEGETATION_SPECIES.UNDERSTORY_BUSH]: buildUnderstoryBushPrototype({ isSoftwareGl }),
+    [VEGETATION_SPECIES.LOW_SCRUB]: buildLowScrubPrototype({ isSoftwareGl }),
   };
 
   // 2. Build shared physically based materials and textures
@@ -167,9 +167,9 @@ export function createVegetationSystem(options = {}) {
     });
 
     const aniso = Math.min(newPreset.anisotropy || 8, 16);
-    if (matSystem.textures.barkMap) matSystem.textures.barkMap.anisotropy = aniso;
-    if (matSystem.textures.birchBarkMap) matSystem.textures.birchBarkMap.anisotropy = aniso;
-    if (matSystem.textures.foliageMap) matSystem.textures.foliageMap.anisotropy = aniso;
+    Object.values(matSystem.textures).forEach((tex) => {
+      if (tex) tex.anisotropy = aniso;
+    });
   };
 
   const getInfo = () => ({
