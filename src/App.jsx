@@ -19,6 +19,7 @@ import {
   CloudSun,
   AlertCircle,
   CheckCircle2,
+  Droplets,
 } from 'lucide-react';
 
 export default function App() {
@@ -73,6 +74,7 @@ export default function App() {
         }
 
         engineRef.current = engine;
+        window.__engine = engine;
         engine.start();
         setEngineInfo(engine.getInfo());
         setIsInitializing(false);
@@ -178,7 +180,7 @@ export default function App() {
               </span>
             </div>
             <p className="text-[11px] text-emerald-400/80 font-mono">
-              Dense Forest &amp; Winding Road • {engineInfo.totalTrees ? `${engineInfo.totalTrees.toLocaleString()} Trees` : 'Procedural Forest'}
+              Dense Forest, Winding Road &amp; Woodland Stream • {engineInfo.totalTrees ? `${engineInfo.totalTrees.toLocaleString()} Trees` : 'Procedural Forest'}
             </p>
           </div>
         </div>
@@ -189,11 +191,14 @@ export default function App() {
         <div className="bg-[#101712]/92 border border-emerald-900/40 rounded-md px-3 py-1.5 text-[11px] font-mono text-emerald-300/90 shadow-md flex items-center gap-2">
           <span>{engineInfo.timeOfDay} ({engineInfo.sunElevation})</span>
           <span className="text-emerald-700">•</span>
+          <span className="flex items-center gap-1 text-teal-300">
+            <Droplets className="w-3 h-3 text-teal-400" />
+            <span>Stream: 142m</span>
+          </span>
+          <span className="text-emerald-700">•</span>
           <span>Preset: {engineInfo.qualityPreset}</span>
           <span className="text-emerald-700">•</span>
           <span>{engineInfo.totalTrees ? `${engineInfo.totalTrees.toLocaleString()} Trees` : 'Forest'}</span>
-          <span className="text-emerald-700">•</span>
-          <span>{engineInfo.totalFloorItems ? `${engineInfo.totalFloorItems.toLocaleString()} Flora` : 'Floor'}</span>
         </div>
       </div>
 

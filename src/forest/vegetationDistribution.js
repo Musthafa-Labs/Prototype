@@ -4,6 +4,7 @@
  */
 
 import { getTerrainHeight, getTerrainNormal, getDistanceToRoad, smoothNoise2D, fbmNoise2D } from './terrainElevation.js';
+import { getDistanceToStream } from './streamPath.js';
 
 /**
  * Vegetation species identifiers.
@@ -215,6 +216,12 @@ export function generateVegetationPlacements(options = {}) {
 
     // 1. Total exclusion on road carriageway & gravel edge
     if (distToRoad < ROAD_MIN_VEGETATION_CLEARANCE) {
+      continue;
+    }
+
+    // 1b. Total exclusion within stream water channel: no trees or bushes growing inside water
+    const streamInfo = getDistanceToStream(x, z);
+    if (streamInfo.distance < (streamInfo.streamWidth / 2 + 0.8)) {
       continue;
     }
 

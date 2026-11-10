@@ -4,6 +4,7 @@
  */
 
 import { getTerrainHeight, getTerrainNormal, getDistanceToRoad, smoothNoise2D, fbmNoise2D } from './terrainElevation.js';
+import { getDistanceToStream } from './streamPath.js';
 import { createDeterministicRng } from './vegetationDistribution.js';
 import { FLOOR_SPECIES } from './forestFloorPrototypes.js';
 
@@ -103,6 +104,13 @@ export function generateForestFloorPlacements(options = {}) {
 
     // Both ends must avoid the road
     if (getDistanceToRoad(tailX, tailZ).distance < ROAD_MIN_LOG_CLEARANCE) continue;
+
+    // Both ends must avoid the stream channel (no floating logs in water)
+    const headStream = getDistanceToStream(x, z);
+    const tailStream = getDistanceToStream(tailX, tailZ);
+    if (headStream.distance < (headStream.streamWidth / 2 + 2.0) || tailStream.distance < (tailStream.streamWidth / 2 + 2.0)) {
+      continue;
+    }
 
     const headY = getTerrainHeight(x, z);
     const tailY = getTerrainHeight(tailX, tailZ);
@@ -351,6 +359,12 @@ export function generateForestFloorPlacements(options = {}) {
 
     const { distance: distToRoad } = getDistanceToRoad(x, z);
     if (distToRoad < ROAD_MIN_FLOOR_CLEARANCE) continue;
+
+    // Prevent grass tufts from covering open water surface
+    const streamInfo = getDistanceToStream(x, z);
+    if (streamInfo.distance < (streamInfo.streamWidth / 2 + 0.2)) {
+      continue;
+    }
 
     // Grass height based on verge distance and glade exposure
     let species;

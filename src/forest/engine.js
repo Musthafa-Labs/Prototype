@@ -113,10 +113,15 @@ export async function initForestEngine(canvas, options = {}) {
   function tick() {
     if (!isRunning) return;
 
+    const now = performance.now();
+    const delta = Math.min((now - lastTime) / 1000, 0.1);
+    if (forestScene.stream && delta > 0) {
+      forestScene.stream.update(delta);
+    }
+
     renderer.render(forestScene.scene, camera);
 
     frameCount++;
-    const now = performance.now();
     if (now - lastTime >= 1000) {
       currentFps = Math.round((frameCount * 1000) / (now - lastTime));
       frameCount = 0;
@@ -216,6 +221,8 @@ export async function initForestEngine(canvas, options = {}) {
       activeSpecies: forestScene.vegetation ? forestScene.vegetation.getInfo().activeSpecies : 0,
       terrainExpanse: '2,200m Rolling Terrain (3,800m Horizon Skirt)',
       roadLength: `${forestScene.road ? forestScene.road.totalLength : 880}m Winding Dirt/Gravel Road`,
+      streamLength: `${forestScene.stream ? forestScene.stream.getInfo().streamLength : '142m'} Woodland Stream & Waterfall`,
+      streamInfo: forestScene.stream ? forestScene.stream.getInfo() : null,
       groundSize: '2,200m Rolling Terrain & 880m Forest Road',
       fogType: `TSL Height-Distance (${timeConf.fog.near}m - ${timeConf.fog.far}m)`,
       tslSupported: true,
@@ -235,6 +242,8 @@ export async function initForestEngine(canvas, options = {}) {
     setQualityPreset,
     setTimeOfDay,
     getInfo,
+    scene: forestScene.scene,
+    camera,
     dispose,
   };
 }

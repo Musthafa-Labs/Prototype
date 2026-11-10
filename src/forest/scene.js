@@ -20,6 +20,7 @@ import { createNaturalTerrain } from './terrain.js';
 import { createForestRoad } from './road.js';
 import { createVegetationSystem } from './vegetation.js';
 import { createForestFloorSystem } from './forestFloor.js';
+import { createForestStreamSystem } from './stream.js';
 import { getTimeOfDayConfig, DEFAULT_TIME_OF_DAY } from './timeOfDay.js';
 
 /**
@@ -134,6 +135,14 @@ export function createForestScene(options = {}) {
   });
   scene.add(forestFloor.group);
 
+  // 8. Woodland Stream & Natural Waterfall System
+  const stream = createForestStreamSystem({
+    isSoftwareGl,
+    preset,
+    maxAnisotropy,
+  });
+  scene.add(stream.group);
+
   /**
    * Dynamically applies a new Time of Day configuration to sky, lighting, and fog.
    * @param {string} timeKey - 'morning', 'noon', 'afternoon', 'goldenHour'
@@ -162,6 +171,9 @@ export function createForestScene(options = {}) {
     scene.fog.far = currentTimeConfig.fog.far;
     scene.background.set(currentTimeConfig.fog.color);
 
+    // Update Stream
+    stream.setTimeOfDay(currentTimeConfig);
+
     return currentTimeConfig;
   };
 
@@ -171,6 +183,7 @@ export function createForestScene(options = {}) {
     road.updateQuality(newPreset);
     vegetation.updateQuality(newPreset);
     forestFloor.updateQuality(newPreset);
+    stream.updateQuality(newPreset);
   };
 
   const dispose = () => {
@@ -180,6 +193,7 @@ export function createForestScene(options = {}) {
     road.dispose();
     vegetation.dispose();
     forestFloor.dispose();
+    stream.dispose();
   };
 
   return {
@@ -190,6 +204,7 @@ export function createForestScene(options = {}) {
     road,
     vegetation,
     forestFloor,
+    stream,
     ground: terrain, // preserve backward compatibility
     get currentTimeConfig() {
       return currentTimeConfig;
